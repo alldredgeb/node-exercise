@@ -1,0 +1,25 @@
+{
+  "name": "exercise",
+  "version": "1.0.0",
+  "description": "A little exercise using a Star Wars API [https://swapi.co/](https://swapi.co/)",
+  "main": "index.js",
+  "proxy": "http://localhost:3100",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alldredgeb/node-exercise.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alldredgeb/node-exercise/issues"
+  },
+  "homepage": "https://github.com/alldredgeb/node-exercise#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
+}
