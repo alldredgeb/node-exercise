@@ -12,19 +12,36 @@ app.use(bodyParser.json());
 
 //ENDPOINTS
 app.get('/api/people', (req, res) => {
-  var page = 1;
+  var peoplePageUrl = 'https://swapi.co/api/people';
   var peopleData = [];
   function swapiPeople() {
-    axios.get(`https://swapi.co/api/people/?page=${page}`).then(response => {
+    axios.get(peoplePageUrl).then(response => {
       for(let i = 0 ; i < response.data.results.length ; i++) {
         peopleData.push(response.data.results[i])
       }
-      if (page < 9) {
-        page++
+      if (response.data.next) {
+        peoplePageUrl = response.data.next
         swapiPeople();
       }
       else {
-        res.status(200).send(peopleData)
+        if (req.query.sortBy === 'name') {
+          console.log('name sort')
+          peopleData.sort((a,b) => (a.name > b.name) ? 1 : ((a.name < b.name) ? -1 : 0));
+          res.status(200).send(peopleData)
+        }
+        else if (req.query.sortBy === 'height') {
+          console.log('height sort')
+          peopleData.sort((a,b) => a.height - b.height);
+          res.status(200).send(peopleData)
+        }
+        else if (req.query.sortBy === 'mass') {
+          console.log('mass sort')
+          peopleData.sort((a,b) => a.mass - b.mass);
+          res.status(200).send(peopleData)
+        }
+        else {
+          res.status(200).send(peopleData)
+        }
       }
     }).catch( error => {
       res.status(404).send(error);
@@ -34,11 +51,37 @@ app.get('/api/people', (req, res) => {
 })
 
 app.get('/api/planets', (req, res) => {
-  axios.get('https://swapi.co/api/planets').then(response => {
-    res.status(200).send(response)
-  }).catch( error => {
-    res.status(500).send(error);
-  })
+  var planetsPageUrl = 'https://swapi.co/api/planets';
+  var planetsData = [];
+  function swapiPlanets() {
+    axios.get(planetsPageUrl).then(response => {
+      for(let j = 0 ; j < response.data.results.length ; j++) {
+        planetsData.push(response.data.results[j])
+      }
+      if (response.data.next) {
+        planetsPageUrl = response.data.next
+        swapiPlanets();
+      }
+      else {
+        planetsDataIndex = 0;
+        planetResidentUrl = '';
+        function insertResidentNames() {
+          
+          if(planetsDataIndex < planetsData.length - 1) {
+            planetsIndex++
+            insertResidentNames();
+          }
+          else {
+            res.status(200).send(planetsData)
+          }
+        }
+        insertResidentNames();
+      }
+    }).catch( error => {
+      res.status(404).send(error);
+    })
+  }
+  swapiPlanets();
 })
 
 //LISTEN
