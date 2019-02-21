@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 
 //ENDPOINTS
 app.get('/api/people', (req, res) => {
-  var peoplePageUrl = 'https://swapi.co/api/people';
+  var peoplePageUrl = 'https://swapi.co/api/people/';
   var peopleData = [];
   function swapiPeople() {
     axios.get(peoplePageUrl).then(response => {
@@ -48,7 +48,7 @@ app.get('/api/people', (req, res) => {
 })
 
 app.get('/api/planets', (req, res) => {
-  var planetsPageUrl = 'https://swapi.co/api/planets';
+  var planetsPageUrl = 'https://swapi.co/api/planets/';
   var planetsData = [];
   function swapiPlanets() {
     axios.get(planetsPageUrl).then(response => {
@@ -60,7 +60,6 @@ app.get('/api/planets', (req, res) => {
           let residentUrls = [];
           planet.residents.forEach( residentUrl => {
             residentUrls.push(axios.get(residentUrl))
-            console.log('planet name and URLs', planet.name, residentUrl);
           });
           let residentNames = [];
           axios.all(residentUrls).then( residentsResponse => {
@@ -68,7 +67,6 @@ app.get('/api/planets', (req, res) => {
               residentNames.push(resident.data.name);
             })
           }).then( () => {
-            console.log();
             planet.residents = residentNames;
           })
           planetsData.push(planet);
